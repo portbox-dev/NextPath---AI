@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nextpath-ai-818903803369.asia-southeast1.run.app/sitemap.xml
