@@ -13,7 +13,12 @@ import {
   Loader2,
   Brain,
   Check,
-  CheckCircle2
+  CheckCircle2,
+  BookOpen,
+  Layers,
+  ShieldAlert,
+  ListOrdered,
+  Code2
 } from 'lucide-react';
 import { ChatMessage, QuickPrompt, ProposedMemoryFact } from '../types';
 import { nextPathIcon } from '../assets/brandAssets';
@@ -136,13 +141,13 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#07090e] relative overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-[#07090e] relative overflow-hidden min-w-0 w-full">
       {/* Subtle Background Atmospheric Lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[300px] bg-gradient-to-tr from-blue-600/8 via-indigo-600/8 to-purple-600/8 blur-[120px] pointer-events-none" />
 
       {/* Main Scrollable Area */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10">
-        <div className="max-w-4xl mx-auto flex flex-col min-h-full">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-6 lg:px-8 py-6 relative z-10 min-w-0 w-full">
+        <div className="max-w-4xl mx-auto flex flex-col min-h-full min-w-0 w-full">
           {messages.length === 0 ? (
             /* Empty Chat State */
             <div id="empty-chat-state" className="flex-1 flex flex-col items-center justify-center text-center my-auto py-6">
@@ -159,27 +164,30 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                 </div>
               </div>
 
-              {/* Exact Headings & Taglines */}
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2">
-                NextPath <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">AI</span>
-              </h1>
-
-              <p className="text-base sm:text-lg font-medium text-slate-200 mb-2 max-w-xl">
-                Your AI guide for career and skill development.
-              </p>
-
-              <p className="text-sm text-slate-400 mb-6 max-w-lg">
-                Get clear guidance about careers, skills, learning paths and your next steps.
-              </p>
+              {/* Exact Semantic Primary Heading & Taglines */}
+              <div className="mb-6 max-w-xl">
+                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
+                  NextPath <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">AI</span>
+                </h1>
+                <p className="text-base sm:text-lg font-semibold text-slate-200 mb-1">
+                  Free AI Career Roadmap for Students
+                </p>
+                <p className="text-sm font-medium text-indigo-300/90 mb-2">
+                  Your AI guide for career and skill development.
+                </p>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Get clear guidance about careers, skills, learning paths and your next steps in software engineering and technology.
+                </p>
+              </div>
 
               {/* Student Focus Tag */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-indigo-300 mb-7">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-indigo-300 mb-7 shadow-sm">
                 <Zap className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Tailored for students exploring careers and skills</span>
+                <span>Tailored for students exploring careers, coding skills, and roadmaps</span>
               </div>
 
               {/* Starter Exploration Prompts Grid */}
-              <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+              <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-10">
                 {starterPrompts.map((p) => (
                   <button
                     key={p.id}
@@ -211,10 +219,119 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                   </button>
                 ))}
               </div>
+
+              {/* Crawlable Semantic SEO & Educational Overview Guide */}
+              <section 
+                id="career-guide-overview" 
+                aria-label="NextPath AI Comprehensive Career and Skill Guide"
+                className="w-full max-w-2xl pt-8 border-t border-slate-800/80 text-left space-y-8"
+              >
+                {/* 1. What NextPath AI Does */}
+                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
+                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                      <Target className="w-4 h-4" />
+                    </div>
+                    <span>What NextPath AI Does</span>
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    NextPath AI is an interactive career discovery and skill planning platform designed specifically for students, beginners, and BCA learners. It breaks down complex technical careers—such as Full-Stack Web Development, Frontend Engineering, Backend Systems, Cloud, Data Science, and Cybersecurity—into structured, actionable learning milestones.
+                  </p>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    With personalized contextual memory, NextPath AI remembers your degree, semester, current skills, and interests to tailor suggestions, recommend suitable projects, and guide you through real-world interview preparation.
+                  </p>
+                </div>
+
+                {/* 2. Who Can Benefit from NextPath AI */}
+                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
+                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                      <GraduationCap className="w-4 h-4" />
+                    </div>
+                    <span>Who Can Benefit from NextPath AI</span>
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-300">
+                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
+                      <p className="font-semibold text-slate-100 mb-1">College &amp; University Students</p>
+                      <p className="text-slate-400 text-xs">Plan tech internships, capstone project milestones, and prepare for junior developer campus placements.</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
+                      <p className="font-semibold text-slate-100 mb-1">BCA &amp; IT Undergraduates</p>
+                      <p className="text-slate-400 text-xs">Bridge university syllabus gaps with modern, job-ready frameworks and industry developer workflows.</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
+                      <p className="font-semibold text-slate-100 mb-1">Beginners with Zero Experience</p>
+                      <p className="text-slate-400 text-xs">Get clear, structured advice on first programming languages and tool setups without confusing jargon.</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
+                      <p className="font-semibold text-slate-100 mb-1">Career Changers &amp; Self-Taught</p>
+                      <p className="text-slate-400 text-xs">Transition efficiently into software roles with focused curriculums and verified portfolio guidance.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. How to Create a Career or Skill Roadmap */}
+                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
+                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                      <Compass className="w-4 h-4" />
+                    </div>
+                    <span>How to Create a Career or Skill Roadmap</span>
+                  </h2>
+                  <ol className="space-y-2.5 text-xs sm:text-sm text-slate-300 list-decimal list-inside">
+                    <li className="leading-relaxed">
+                      <strong className="text-white">Share Your Background:</strong> Enter your degree, current academic year, familiar languages, and desired field in the AI Advisor chat.
+                    </li>
+                    <li className="leading-relaxed">
+                      <strong className="text-white">Review Your Structured Pathway:</strong> Open the "My Roadmap" tab to inspect personalized stages spanning core foundations to production deployment.
+                    </li>
+                    <li className="leading-relaxed">
+                      <strong className="text-white">Customize &amp; Track Milestones:</strong> Adjust target roles, weekly study hours, and mark topics completed as you practice.
+                    </li>
+                  </ol>
+                </div>
+
+                {/* 4. Learning Steps and Practical Project Ideas */}
+                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
+                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                      <Code2 className="w-4 h-4" />
+                    </div>
+                    <span>Learning Steps and Practical Project Ideas</span>
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    True competence comes from building real software. NextPath AI guides students through four progressive tiers of mastery:
+                  </p>
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-400 list-disc list-inside">
+                    <li><strong className="text-slate-200">Core Foundations:</strong> Version control with Git/GitHub, semantic HTML5, modern CSS, JavaScript &amp; TypeScript basics, and data structures.</li>
+                    <li><strong className="text-slate-200">Full-Stack Application Development:</strong> RESTful APIs, relational databases (PostgreSQL/SQL), user authentication, React components, and responsive design.</li>
+                    <li><strong className="text-slate-200">Portfolio Showcase Projects:</strong> Real-world capstones such as student course managers, personal finance trackers, interactive chat apps, and collaborative tools.</li>
+                    <li><strong className="text-slate-200">Deployment &amp; Cloud Best Practices:</strong> Docker containers, automated CI/CD pipelines, cloud deployment, and system monitoring.</li>
+                  </ul>
+                </div>
+
+                {/* 5. Platform Scope and Important Limitations */}
+                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-amber-500/25 space-y-2.5">
+                  <h2 className="text-base sm:text-lg font-bold text-amber-300 flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                      <ShieldAlert className="w-4 h-4" />
+                    </div>
+                    <span>Platform Scope and Important Limitations</span>
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    NextPath AI is an educational advisory tool designed to accelerate self-directed learning. To maintain transparency, please keep in mind:
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-400 list-disc list-inside">
+                    <li>NextPath AI does not guarantee employment, placements, or campus interview selections.</li>
+                    <li>The platform does not issue accredited university degrees or formal government certifications.</li>
+                    <li>Always cross-reference company-specific hiring guidelines, regional job boards, and official academic prerequisites.</li>
+                  </ul>
+                </div>
+              </section>
             </div>
           ) : (
             /* Active Messages Conversation View */
-            <div id="messages-container" className="space-y-5 pb-4">
+            <div id="messages-container" className="space-y-5 pb-4 min-w-0 w-full">
               <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-slate-400">
@@ -233,7 +350,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex gap-3 sm:gap-4 ${
+                  className={`flex gap-3 sm:gap-4 min-w-0 w-full ${
                     msg.role === 'user' ? 'justify-end' : 'justify-start'
                   }`}
                 >
@@ -249,14 +366,14 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                   )}
 
                   <div
-                    className={`max-w-[85%] sm:max-w-xl rounded-2xl p-4 text-sm leading-relaxed ${
+                    className={`max-w-[85%] sm:max-w-xl min-w-0 rounded-2xl p-4 text-sm leading-relaxed [overflow-wrap:anywhere] [word-break:break-word] ${
                       msg.role === 'user'
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-950/40 rounded-tr-none'
                         : 'bg-[#0d1322] border border-slate-800/90 text-slate-200 shadow-sm rounded-tl-none'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-white/10 gap-4">
-                      <span className="text-[11px] font-semibold opacity-80">
+                    <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-white/10 gap-4 min-w-0">
+                      <span className="text-[11px] font-semibold opacity-80 truncate">
                         {msg.role === 'user' ? 'You' : 'NextPath AI'}
                       </span>
                       <span className="text-[10px] opacity-60 shrink-0">
@@ -264,42 +381,114 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                       </span>
                     </div>
                     {msg.role === 'assistant' ? (
-                      <div>
-                        <div className="markdown-body space-y-2 text-sm leading-relaxed text-slate-200 [&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_li]:leading-relaxed [&_strong]:text-white [&_strong]:font-semibold [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:bg-slate-900 [&_code]:rounded [&_code]:text-indigo-300 [&_code]:text-xs">
-                          <Markdown>{msg.content}</Markdown>
+                      <div className="min-w-0 w-full">
+                        <div className="markdown-body space-y-2 text-sm leading-relaxed text-slate-200 min-w-0 w-full [overflow-wrap:anywhere] [word-break:break-word] [&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_li]:leading-relaxed [&_li]:[overflow-wrap:anywhere] [&_strong]:text-white [&_strong]:font-semibold">
+                          <Markdown
+                            components={{
+                              pre: ({ children, ...props }) => (
+                                <div className="my-2.5 max-w-full overflow-hidden rounded-xl border border-slate-800/80 bg-[#060911]">
+                                  <pre
+                                    className="overflow-x-auto p-3 text-xs font-mono text-slate-200 max-w-full scrollbar-thin"
+                                    {...props}
+                                  >
+                                    {children}
+                                  </pre>
+                                </div>
+                              ),
+                              code: ({ node, className, children, ...props }) => {
+                                const isMultiLine = String(children).includes('\n');
+                                const isBlock = Boolean(className?.includes('language-')) || isMultiLine;
+                                if (!isBlock) {
+                                  return (
+                                    <code
+                                      className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800/80 text-indigo-300 font-mono text-xs [overflow-wrap:anywhere] [word-break:break-word]"
+                                      {...props}
+                                    >
+                                      {children}
+                                    </code>
+                                  );
+                                }
+                                return (
+                                  <code className="font-mono text-xs text-indigo-200 block" {...props}>
+                                    {children}
+                                  </code>
+                                );
+                              },
+                              p: ({ children, ...props }) => (
+                                <p className="mb-2 last:mb-0 [overflow-wrap:anywhere] [word-break:break-word] leading-relaxed" {...props}>
+                                  {children}
+                                </p>
+                              ),
+                              ul: ({ children, ...props }) => (
+                                <ul className="list-disc pl-5 space-y-1 mb-2 [overflow-wrap:anywhere] [word-break:break-word]" {...props}>
+                                  {children}
+                                </ul>
+                              ),
+                              ol: ({ children, ...props }) => (
+                                <ol className="list-decimal pl-5 space-y-1 mb-2 [overflow-wrap:anywhere] [word-break:break-word]" {...props}>
+                                  {children}
+                                </ol>
+                              ),
+                              li: ({ children, ...props }) => (
+                                <li className="leading-relaxed [overflow-wrap:anywhere] [word-break:break-word]" {...props}>
+                                  {children}
+                                </li>
+                              ),
+                              table: ({ children, ...props }) => (
+                                <div className="my-2.5 max-w-full overflow-x-auto rounded-lg border border-slate-800">
+                                  <table className="min-w-full divide-y divide-slate-800 text-left text-xs" {...props}>
+                                    {children}
+                                  </table>
+                                </div>
+                              ),
+                              a: ({ href, children, ...props }) => (
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 [overflow-wrap:anywhere] [word-break:break-word]"
+                                  {...props}
+                                >
+                                  {children}
+                                </a>
+                              ),
+                            }}
+                          >
+                            {msg.content}
+                          </Markdown>
                         </div>
 
                         {/* Smart Memory Confirmation Box */}
                         {msg.proposedMemories && msg.proposedMemories.length > 0 && (
-                          <div className="mt-3.5 pt-3 border-t border-slate-800/80">
+                          <div className="mt-3.5 pt-3 border-t border-slate-800/80 min-w-0">
                             {msg.memoryPromptStatus === 'pending' || !msg.memoryPromptStatus ? (
                               <div
                                 id={`memory-confirmation-${msg.id}`}
-                                className="p-3 sm:p-3.5 rounded-xl bg-[#080c16]/95 border border-indigo-500/30 text-xs text-slate-300 shadow-sm transition-all"
+                                className="p-3 sm:p-3.5 rounded-xl bg-[#080c16]/95 border border-indigo-500/30 text-xs text-slate-300 shadow-sm transition-all min-w-0"
                               >
-                                <div className="flex items-start gap-2.5 mb-2.5">
+                                <div className="flex items-start gap-2.5 mb-2.5 min-w-0">
                                   <div className="w-5 h-5 rounded-lg bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center text-indigo-400 shrink-0 mt-0.5">
                                     <Brain className="w-3.5 h-3.5" />
                                   </div>
-                                  <div>
+                                  <div className="min-w-0">
                                     <div className="font-semibold text-slate-200 text-xs leading-snug">
                                       Would you like me to remember this for future conversations?
                                     </div>
-                                    <div className="mt-1.5 flex flex-wrap gap-1.5">
+                                    <div className="mt-1.5 flex flex-wrap gap-1.5 min-w-0">
                                       {msg.proposedMemories.map((fact, idx) => (
                                         <span
                                           key={idx}
-                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-950/70 border border-indigo-500/20 text-[11px] text-indigo-200"
+                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-950/70 border border-indigo-500/20 text-[11px] text-indigo-200 max-w-full"
                                         >
-                                          <span className="font-medium text-slate-400">{fact.category}:</span>
-                                          <span className="font-semibold text-indigo-100">{fact.value}</span>
+                                          <span className="font-medium text-slate-400 shrink-0">{fact.category}:</span>
+                                          <span className="font-semibold text-indigo-100 truncate">{fact.value}</span>
                                         </span>
                                       ))}
                                     </div>
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 pt-1">
+                                <div className="flex flex-wrap items-center gap-2 pt-1">
                                   <button
                                     id={`save-memory-btn-${msg.id}`}
                                     onClick={() => onConfirmSaveMemory?.(msg.id, msg.proposedMemories!)}
@@ -328,7 +517,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                         )}
                       </div>
                     ) : (
-                      <div className="whitespace-pre-wrap">{msg.content}</div>
+                      <div className="whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word] min-w-0">
+                        {msg.content}
+                      </div>
                     )}
                   </div>
 
@@ -342,7 +533,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
 
               {/* AI Thinking / Loading Indicator */}
               {isThinking && (
-                <div className="flex gap-3 sm:gap-4 justify-start animate-in fade-in duration-200">
+                <div className="flex gap-3 sm:gap-4 justify-start animate-in fade-in duration-200 min-w-0">
                   <div className="w-8 h-8 rounded-xl bg-[#090d16] border border-indigo-500/30 p-1 flex items-center justify-center shrink-0 shadow-sm overflow-hidden mt-0.5">
                     <img
                       src={nextPathIcon}
@@ -352,10 +543,10 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                     />
                   </div>
 
-                  <div className="rounded-2xl rounded-tl-none p-3.5 bg-[#0d1322] border border-slate-800 text-slate-300 text-xs flex items-center gap-2.5 shadow-sm">
+                  <div className="rounded-2xl rounded-tl-none p-3.5 bg-[#0d1322] border border-slate-800 text-slate-300 text-xs flex items-center gap-2.5 shadow-sm min-w-0">
                     <Loader2 className="w-3.5 h-3.5 text-indigo-400 animate-spin shrink-0" />
-                    <span className="font-medium text-slate-300">NextPath AI is thinking</span>
-                    <div className="flex items-center gap-1 ml-0.5">
+                    <span className="font-medium text-slate-300 truncate">NextPath AI is thinking</span>
+                    <div className="flex items-center gap-1 ml-0.5 shrink-0">
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -371,11 +562,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
       </div>
 
       {/* Message Input Bottom Bar */}
-      <div className="border-t border-slate-800/80 bg-[#07090e]/95 backdrop-blur-md p-3.5 sm:p-4 relative z-20">
-        <div className="max-w-4xl mx-auto">
+      <div className="border-t border-slate-800/80 bg-[#07090e]/95 backdrop-blur-md p-3.5 sm:p-4 relative z-20 min-w-0 w-full">
+        <div className="max-w-4xl mx-auto min-w-0 w-full">
           <div
             id="chat-input-container"
-            className="relative flex items-end bg-[#0b101c] border border-slate-800 focus-within:border-indigo-500/60 rounded-2xl shadow-lg shadow-black/40 transition duration-200 p-2 sm:p-2.5 gap-2"
+            className="relative flex items-end bg-[#0b101c] border border-slate-800 focus-within:border-indigo-500/60 rounded-2xl shadow-lg shadow-black/40 transition duration-200 p-2 sm:p-2.5 gap-2 min-w-0"
           >
             {/* Input icon */}
             <div className="pl-2 pb-2.5 flex items-center shrink-0">
@@ -398,7 +589,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
               onChange={handleInput}
               onKeyDown={handleKeyDown}
               placeholder={placeholderText}
-              className="w-full py-2 bg-transparent text-sm text-slate-100 placeholder:text-xs sm:placeholder:text-sm placeholder-slate-400 focus:outline-none resize-none max-h-32 min-h-[38px] leading-relaxed"
+              className="w-full py-2 bg-transparent text-sm text-slate-100 placeholder:text-xs sm:placeholder:text-sm placeholder-slate-400 focus:outline-none resize-none max-h-32 min-h-[38px] leading-relaxed min-w-0"
             />
 
             {/* Send Action */}

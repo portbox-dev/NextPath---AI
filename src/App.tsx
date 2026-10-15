@@ -512,7 +512,7 @@ export default function App() {
           />
 
           {/* Active View Container */}
-          <main id="app-main-viewport" className="flex-1 flex flex-col overflow-hidden relative">
+          <main id="app-main-viewport" className="flex-1 flex flex-col overflow-hidden relative min-w-0">
             {activeTab === 'chat' && (
               <ChatArea
                 messages={messages}

@@ -287,7 +287,11 @@ ${memoryContextText}`;
   });
 
   // Setup Vite middleware for development, or static serving for production
-  if (process.env.NODE_ENV !== "production") {
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    (typeof process.argv[1] === "string" && process.argv[1].endsWith("server.cjs"));
+
+  if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -295,7 +299,11 @@ ${memoryContextText}`;
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
+    const publicPath = path.join(process.cwd(), "public");
     app.use(express.static(distPath));
+    app.use(express.static(publicPath));
+    app.use("/public", express.static(publicPath));
+    app.use("/public", express.static(distPath));
     app.get("*", (_req: Request, res: Response) => {
       res.sendFile(path.join(distPath, "index.html"));
     });

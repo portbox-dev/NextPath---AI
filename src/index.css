@@ -26,3 +26,21 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* Code block & pre overflow prevention */
+pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+code {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+pre code {
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
