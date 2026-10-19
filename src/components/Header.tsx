@@ -34,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       id="main-app-header"
-      className="h-16 border-b border-slate-800/80 bg-[#07090e]/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-20 shrink-0"
+      className="sticky top-0 w-full h-16 border-b border-slate-800/80 bg-[#07090e]/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-20 shrink-0"
     >
       <div className="flex items-center gap-3">
         {/* Mobile menu trigger */}

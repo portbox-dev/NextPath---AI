@@ -30,16 +30,11 @@ export default function App() {
   
   // Persistent Chat Sessions
   const [savedChats, setSavedChats] = useState<ChatSession[]>(() => loadSavedChats());
-  const [activeChatId, setActiveChatId] = useState<string | null>(() => {
-    const initialChats = loadSavedChats();
-    return initialChats.length > 0 ? initialChats[0].id : null;
-  });
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   
-  // Active conversation messages
-  const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    const initialChats = loadSavedChats();
-    return initialChats.length > 0 ? initialChats[0].messages : [];
-  });
+  // Active conversation messages - fresh empty chat session
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [freshChatTrigger, setFreshChatTrigger] = useState<number>(0);
 
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const [memories, setMemories] = useState<MemoryItem[]>(() => loadMemory());
@@ -448,6 +443,7 @@ export default function App() {
     setActiveChatId(null);
     setMessages([]);
     setActiveTab('chat');
+    setFreshChatTrigger((prev) => prev + 1);
   };
 
   const handleClearChat = () => {
@@ -458,6 +454,7 @@ export default function App() {
     setIsThinking(false);
     isSendingRef.current = false;
     setMessages([]);
+    setFreshChatTrigger((prev) => prev + 1);
 
     if (activeChatId) {
       setSavedChats((prev) =>
@@ -477,15 +474,21 @@ export default function App() {
     }, 50);
   };
 
+  const handleEnterApp = () => {
+    setShowSplash(false);
+    handleNewChat();
+    setFreshChatTrigger((prev) => prev + 1);
+  };
+
   return (
-    <div id="nextpath-app-root" className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white antialiased">
+    <div id="nextpath-app-root" className="h-full h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-[#07090e] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white antialiased">
       {/* Splash Screen */}
       {showSplash && (
-        <SplashScreen onDismiss={() => setShowSplash(false)} />
+        <SplashScreen onDismiss={handleEnterApp} />
       )}
 
       {/* Main App Container */}
-      <div className="flex h-screen w-full overflow-hidden">
+      <div className="flex flex-1 h-full w-full overflow-hidden min-h-0">
         {/* Sidebar */}
         <Sidebar
           activeTab={activeTab}
@@ -502,7 +505,7 @@ export default function App() {
         />
 
         {/* Main Application Area */}
-        <div className="flex-1 flex flex-col h-full min-w-0 bg-[#07090e]">
+        <div className="flex-1 flex flex-col h-full min-w-0 min-h-0 bg-[#07090e] overflow-hidden">
           {/* Header */}
           <Header
             activeTab={activeTab}
@@ -512,7 +515,7 @@ export default function App() {
           />
 
           {/* Active View Container */}
-          <main id="app-main-viewport" className="flex-1 flex flex-col overflow-hidden relative min-w-0">
+          <main id="app-main-viewport" className="flex-1 flex flex-col overflow-hidden relative min-w-0 min-h-0">
             {activeTab === 'chat' && (
               <ChatArea
                 messages={messages}
@@ -521,6 +524,7 @@ export default function App() {
                 onClearChat={handleClearChat}
                 onConfirmSaveMemory={handleConfirmSaveMemory}
                 onDismissMemoryPrompt={handleDismissMemoryPrompt}
+                freshChatTrigger={freshChatTrigger}
               />
             )}
 

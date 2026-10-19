@@ -14,7 +14,7 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div id="settings-view-container" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090e]">
+    <div id="settings-view-container" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090e] min-h-0 min-w-0 overscroll-y-contain">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8 pb-6 border-b border-slate-800/80">

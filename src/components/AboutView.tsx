@@ -8,7 +8,7 @@ interface AboutViewProps {
 
 export const AboutView: React.FC<AboutViewProps> = ({ onGoToChat }) => {
   return (
-    <div id="about-view-container" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090e]">
+    <div id="about-view-container" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090e] min-h-0 min-w-0 overscroll-y-contain">
       <div className="max-w-4xl mx-auto space-y-10">
         {/* Hero Branding Section */}
         <div className="text-center max-w-2xl mx-auto">

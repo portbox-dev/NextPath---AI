@@ -212,7 +212,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({ memories, onStartChatW
   };
 
   return (
-    <div id="roadmap-view-container" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090e] relative">
+    <div id="roadmap-view-container" className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090e] relative min-h-0 min-w-0 overscroll-y-contain">
       {/* Ambient background glow */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />

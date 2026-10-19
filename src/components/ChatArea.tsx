@@ -13,12 +13,7 @@ import {
   Loader2,
   Brain,
   Check,
-  CheckCircle2,
-  BookOpen,
-  Layers,
-  ShieldAlert,
-  ListOrdered,
-  Code2
+  CheckCircle2
 } from 'lucide-react';
 import { ChatMessage, QuickPrompt, ProposedMemoryFact } from '../types';
 import { nextPathIcon } from '../assets/brandAssets';
@@ -30,6 +25,7 @@ interface ChatAreaProps {
   onClearChat: () => void;
   onConfirmSaveMemory?: (messageId: string, proposed: ProposedMemoryFact[]) => void;
   onDismissMemoryPrompt?: (messageId: string) => void;
+  freshChatTrigger?: number;
 }
 
 export const ChatArea: React.FC<ChatAreaProps> = ({
@@ -39,11 +35,13 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   onClearChat,
   onConfirmSaveMemory,
   onDismissMemoryPrompt,
+  freshChatTrigger = 0,
 }) => {
   const [inputPrompt, setInputPrompt] = useState('');
   const [isMobile, setIsMobile] = useState<boolean>(() =>
     typeof window !== 'undefined' ? window.innerWidth < 640 : false
   );
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -90,13 +88,51 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
     },
   ];
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToTop = (behavior: ScrollBehavior = 'auto') => {
+    // 1. Immediate synchronous reset
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+    // 2. Browser paint cycle reset
+    requestAnimationFrame(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: 0,
+          behavior,
+        });
+      }
+      // 3. Post-render layout settling safety check
+      setTimeout(() => {
+        if (scrollContainerRef.current && messages.length === 0) {
+          scrollContainerRef.current.scrollTop = 0;
+        }
+      }, 50);
+    });
   };
 
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    requestAnimationFrame(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: scrollContainerRef.current.scrollHeight,
+          behavior,
+        });
+      } else {
+        messagesEndRef.current?.scrollIntoView({ behavior });
+      }
+    });
+  };
+
+  // Scroll position controller:
+  // - On fresh/empty chat (messages.length === 0 or freshChatTrigger): always ensure viewport starts at top (scrollTop = 0).
+  // - On active conversations with messages: auto-scroll to latest message at the bottom.
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isThinking]);
+    if (messages.length === 0) {
+      scrollToTop('auto');
+    } else {
+      scrollToBottom('smooth');
+    }
+  }, [messages, isThinking, freshChatTrigger]);
 
   const handleSend = () => {
     const trimmed = inputPrompt.trim();
@@ -141,12 +177,16 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#07090e] relative overflow-hidden min-w-0 w-full">
+    <div className="flex-1 flex flex-col h-full bg-[#07090e] relative overflow-hidden min-w-0 min-h-0 w-full">
       {/* Subtle Background Atmospheric Lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[300px] bg-gradient-to-tr from-blue-600/8 via-indigo-600/8 to-purple-600/8 blur-[120px] pointer-events-none" />
 
       {/* Main Scrollable Area */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-6 lg:px-8 py-6 relative z-10 min-w-0 w-full">
+      <div
+        ref={scrollContainerRef}
+        id="chat-messages-scroll-area"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 relative z-10 min-w-0 min-h-0 w-full overscroll-y-contain [overflow-anchor:none]"
+      >
         <div className="max-w-4xl mx-auto flex flex-col min-h-full min-w-0 w-full">
           {messages.length === 0 ? (
             /* Empty Chat State */
@@ -187,7 +227,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
               </div>
 
               {/* Starter Exploration Prompts Grid */}
-              <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-10">
+              <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-6">
                 {starterPrompts.map((p) => (
                   <button
                     key={p.id}
@@ -219,115 +259,6 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                   </button>
                 ))}
               </div>
-
-              {/* Crawlable Semantic SEO & Educational Overview Guide */}
-              <section 
-                id="career-guide-overview" 
-                aria-label="NextPath AI Comprehensive Career and Skill Guide"
-                className="w-full max-w-2xl pt-8 border-t border-slate-800/80 text-left space-y-8"
-              >
-                {/* 1. What NextPath AI Does */}
-                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
-                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <span>What NextPath AI Does</span>
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    NextPath AI is an interactive career discovery and skill planning platform designed specifically for students, beginners, and BCA learners. It breaks down complex technical careers—such as Full-Stack Web Development, Frontend Engineering, Backend Systems, Cloud, Data Science, and Cybersecurity—into structured, actionable learning milestones.
-                  </p>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    With personalized contextual memory, NextPath AI remembers your degree, semester, current skills, and interests to tailor suggestions, recommend suitable projects, and guide you through real-world interview preparation.
-                  </p>
-                </div>
-
-                {/* 2. Who Can Benefit from NextPath AI */}
-                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
-                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-                      <GraduationCap className="w-4 h-4" />
-                    </div>
-                    <span>Who Can Benefit from NextPath AI</span>
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-300">
-                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
-                      <p className="font-semibold text-slate-100 mb-1">College &amp; University Students</p>
-                      <p className="text-slate-400 text-xs">Plan tech internships, capstone project milestones, and prepare for junior developer campus placements.</p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
-                      <p className="font-semibold text-slate-100 mb-1">BCA &amp; IT Undergraduates</p>
-                      <p className="text-slate-400 text-xs">Bridge university syllabus gaps with modern, job-ready frameworks and industry developer workflows.</p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
-                      <p className="font-semibold text-slate-100 mb-1">Beginners with Zero Experience</p>
-                      <p className="text-slate-400 text-xs">Get clear, structured advice on first programming languages and tool setups without confusing jargon.</p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70">
-                      <p className="font-semibold text-slate-100 mb-1">Career Changers &amp; Self-Taught</p>
-                      <p className="text-slate-400 text-xs">Transition efficiently into software roles with focused curriculums and verified portfolio guidance.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. How to Create a Career or Skill Roadmap */}
-                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
-                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-                      <Compass className="w-4 h-4" />
-                    </div>
-                    <span>How to Create a Career or Skill Roadmap</span>
-                  </h2>
-                  <ol className="space-y-2.5 text-xs sm:text-sm text-slate-300 list-decimal list-inside">
-                    <li className="leading-relaxed">
-                      <strong className="text-white">Share Your Background:</strong> Enter your degree, current academic year, familiar languages, and desired field in the AI Advisor chat.
-                    </li>
-                    <li className="leading-relaxed">
-                      <strong className="text-white">Review Your Structured Pathway:</strong> Open the "My Roadmap" tab to inspect personalized stages spanning core foundations to production deployment.
-                    </li>
-                    <li className="leading-relaxed">
-                      <strong className="text-white">Customize &amp; Track Milestones:</strong> Adjust target roles, weekly study hours, and mark topics completed as you practice.
-                    </li>
-                  </ol>
-                </div>
-
-                {/* 4. Learning Steps and Practical Project Ideas */}
-                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-slate-800/80 space-y-3">
-                  <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                      <Code2 className="w-4 h-4" />
-                    </div>
-                    <span>Learning Steps and Practical Project Ideas</span>
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    True competence comes from building real software. NextPath AI guides students through four progressive tiers of mastery:
-                  </p>
-                  <ul className="space-y-2 text-xs sm:text-sm text-slate-400 list-disc list-inside">
-                    <li><strong className="text-slate-200">Core Foundations:</strong> Version control with Git/GitHub, semantic HTML5, modern CSS, JavaScript &amp; TypeScript basics, and data structures.</li>
-                    <li><strong className="text-slate-200">Full-Stack Application Development:</strong> RESTful APIs, relational databases (PostgreSQL/SQL), user authentication, React components, and responsive design.</li>
-                    <li><strong className="text-slate-200">Portfolio Showcase Projects:</strong> Real-world capstones such as student course managers, personal finance trackers, interactive chat apps, and collaborative tools.</li>
-                    <li><strong className="text-slate-200">Deployment &amp; Cloud Best Practices:</strong> Docker containers, automated CI/CD pipelines, cloud deployment, and system monitoring.</li>
-                  </ul>
-                </div>
-
-                {/* 5. Platform Scope and Important Limitations */}
-                <div className="p-5 rounded-2xl bg-[#0b101c]/90 border border-amber-500/25 space-y-2.5">
-                  <h2 className="text-base sm:text-lg font-bold text-amber-300 flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-                      <ShieldAlert className="w-4 h-4" />
-                    </div>
-                    <span>Platform Scope and Important Limitations</span>
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    NextPath AI is an educational advisory tool designed to accelerate self-directed learning. To maintain transparency, please keep in mind:
-                  </p>
-                  <ul className="space-y-1.5 text-xs text-slate-400 list-disc list-inside">
-                    <li>NextPath AI does not guarantee employment, placements, or campus interview selections.</li>
-                    <li>The platform does not issue accredited university degrees or formal government certifications.</li>
-                    <li>Always cross-reference company-specific hiring guidelines, regional job boards, and official academic prerequisites.</li>
-                  </ul>
-                </div>
-              </section>
             </div>
           ) : (
             /* Active Messages Conversation View */
@@ -562,7 +493,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
       </div>
 
       {/* Message Input Bottom Bar */}
-      <div className="border-t border-slate-800/80 bg-[#07090e]/95 backdrop-blur-md p-3.5 sm:p-4 relative z-20 min-w-0 w-full">
+      <div className="shrink-0 border-t border-slate-800/80 bg-[#07090e]/95 backdrop-blur-md p-3 sm:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] relative z-20 min-w-0 w-full">
         <div className="max-w-4xl mx-auto min-w-0 w-full">
           <div
             id="chat-input-container"
